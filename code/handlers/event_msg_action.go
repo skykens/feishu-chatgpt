@@ -2,6 +2,7 @@ package handlers
 
 import (
 	"fmt"
+	"log"
 	"start-feishubot/services/openai"
 )
 
@@ -14,7 +15,7 @@ func (*MessageAction) Execute(a *ActionInfo) bool {
 		Role: "user", Content: a.info.qParsed,
 	})
 	completions, tokens, err := a.handler.gpt.Completions(msg)
-	fmt.Printf("本次调用共tokens : %v , GPT回答 : %v\n", tokens, completions)
+	log.Printf("本次调用共tokens : %v , GPT回答 : %v\n", tokens, completions)
 	if err != nil {
 		replyMsg(*a.ctx, fmt.Sprintf(
 			"🤖️：消息机器人摆烂了，请稍后再试～\n错误信息: %v", err), a.info.msgId)
