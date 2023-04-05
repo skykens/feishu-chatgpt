@@ -5,12 +5,13 @@ import (
 	"context"
 	"encoding/base64"
 	"fmt"
-	"github.com/google/uuid"
-	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
-	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 	"start-feishubot/initialization"
 	"start-feishubot/services"
 	"start-feishubot/services/openai"
+
+	"github.com/google/uuid"
+	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
+	larkim "github.com/larksuite/oapi-sdk-go/v3/service/im/v1"
 )
 
 type CardKind string
@@ -591,6 +592,15 @@ func sendClearCacheCheckCard(ctx context.Context,
 		withMainMd("您确定要清除对话上下文吗？"),
 		withNote("请注意，这将开始一个全新的对话，您将无法利用之前话题的历史信息"),
 		withClearDoubleCheckBtn(sessionId))
+	replyCard(ctx, msgId, newCard)
+}
+func sendSystemInnerRoleCard(ctx context.Context,
+	sessionId *string, msgId *string, content string, example string) {
+	newCard, _ := newSendCard(
+		withHeader("🥷  已进入内置角色模式", larkcard.TemplateIndigo),
+		withMainText(content),
+		withNote("输入案例: "+example),
+		withNote("请注意，这将开始一个全新的对话，您将无法利用之前话题的历史信息"))
 	replyCard(ctx, msgId, newCard)
 }
 

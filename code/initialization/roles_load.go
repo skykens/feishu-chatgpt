@@ -2,16 +2,18 @@ package initialization
 
 import (
 	"errors"
+	"io/ioutil"
+	"log"
+
 	"github.com/duke-git/lancet/v2/slice"
 	"github.com/duke-git/lancet/v2/validator"
 	"gopkg.in/yaml.v2"
-	"io/ioutil"
-	"log"
 )
 
 type Role struct {
 	Title   string   `yaml:"title"`
 	Content string   `yaml:"content"`
+	Example string   `yaml:"example"`
 	Tags    []string `yaml:"tags"`
 }
 
@@ -66,11 +68,11 @@ func GetTitleListByTag(tags string) *[]string {
 	return &roles
 }
 
-func GetFirstRoleContentByTitle(title string) (string, error) {
+func GetFirstRoleContentByTitle(title string) (string, string, error) {
 	for _, role := range *RoleList {
 		if role.Title == title {
-			return role.Content, nil
+			return role.Content, role.Example, nil
 		}
 	}
-	return "", errors.New("role not found")
+	return "", "", errors.New("role not found")
 }

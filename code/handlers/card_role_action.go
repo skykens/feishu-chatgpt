@@ -2,10 +2,11 @@ package handlers
 
 import (
 	"context"
-	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 	"start-feishubot/initialization"
 	"start-feishubot/services"
 	"start-feishubot/services/openai"
+
+	larkcard "github.com/larksuite/oapi-sdk-go/v3/card"
 )
 
 func NewRoleTagCardHandler(cardMsg CardMsg,
@@ -57,7 +58,7 @@ func CommonProcessRole(msg CardMsg, cardAction *larkcard.CardAction,
 	cache services.SessionServiceCacheInterface) (interface{},
 	error, bool) {
 	option := cardAction.Action.Option
-	contentByTitle, error := initialization.GetFirstRoleContentByTitle(option)
+	contentByTitle, example, error := initialization.GetFirstRoleContentByTitle(option)
 	if error != nil {
 		return nil, error, true
 	}
@@ -67,8 +68,8 @@ func CommonProcessRole(msg CardMsg, cardAction *larkcard.CardAction,
 	})
 	cache.SetMsg(msg.SessionId, systemMsg)
 	//pp.Println("systemMsg: ", systemMsg)
-	sendSystemInstructionCard(context.Background(), &msg.SessionId,
-		&msg.MsgId, contentByTitle)
+	sendSystemInnerRoleCard(context.Background(), &msg.SessionId,
+		&msg.MsgId, contentByTitle, example)
 	//replyMsg(context.Background(), "已选择角色:"+contentByTitle,
 	//	&msg.MsgId)
 	return nil, nil, true

@@ -41,7 +41,7 @@ type ChatGPTRequestBody struct {
 	PresencePenalty  int        `json:"presence_penalty"`
 }
 
-func (gpt ChatGPT) Completions(msg []Messages) (resp Messages, err error) {
+func (gpt ChatGPT) Completions(msg []Messages) (resp Messages, tokens int, err error) {
 	requestBody := ChatGPTRequestBody{
 		Model:            engine,
 		Messages:         msg,
@@ -62,5 +62,5 @@ func (gpt ChatGPT) Completions(msg []Messages) (resp Messages, err error) {
 		resp = Messages{}
 		err = errors.New("openai 请求失败")
 	}
-	return resp, err
+	return resp, gptResponseBody.Usage["prompt_tokens"].(int), err
 }
